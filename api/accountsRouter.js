@@ -5,12 +5,31 @@ const db = require('../data/dbConfig.js');
 router.use(express.json());
 
 router.get('/', (req, res) => {
-    // res.status(200).json({ api: 'Hello world' })
     db.select('*').from('accounts')
         .then(acc => { res.status(200).json(acc) })
         .catch(err => { res.json(err) })
+})
 
-    // res.status(200).json({ api: '...up' })
+router.get('/:id', (req, res) => {
+    const { id } = req.params;
+
+    db('accounts').where({ id })
+        .first() //going to give me a limit of one object, the first element
+        .then(acc => { res.status(200).json(acc) })
+        .catch(err => { res.json(err) })
+})
+
+router.post('/', (req, res) => {
+    const accData = req.body
+
+    // db.select('*').from('accounts')
+    db('accounts')
+        .insert(accData, 'id')
+        .then(accRes => { res.status(200).json(accRes); })
+        .catch(err => {
+            console.log('error here')
+            res.json(err)
+        })
 })
 
 module.exports = router;
