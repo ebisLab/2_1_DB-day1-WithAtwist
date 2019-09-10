@@ -59,4 +59,15 @@ router.delete('/:id', (req, res) => {
         .catch(err => { res.json(err) })
 })
 
+router.put('/:id', (req, res) => {
+    const { id } = req.params;
+    const changes = req.body;
+
+    db('accounts').where({ id: req.params.id })
+        .update(changes)
+        // .first()
+        .then(count => { res.status(200).json({ message: `updated ${count} records` }) })
+        .catch(err => { res.json(err) })
+})
+
 module.exports = router;
